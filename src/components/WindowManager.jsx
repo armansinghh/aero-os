@@ -2,44 +2,26 @@
 
 import { useState, useCallback } from 'react';
 import Window from './Window';
+import WelcomeApp from './apps/WelcomeApp';
+import ClockApp from './apps/ClockApp';
 
 // ─── App content registry ──────────────────────────────────────────────────────
 // Maps an app id to its title/icon/default size/content component.
-// Real content components (WelcomeApp, ClockApp) get plugged into `content`
-// in Phase 4/5 — for now we use lightweight placeholders so the window
-// manager is fully testable on its own.
-function PlaceholderContent({ label }) {
-  return (
-    <div className="w-full h-full flex items-center justify-center p-6">
-      <p
-        style={{
-          color: '#0a2540',
-          fontSize: '13px',
-          fontWeight: 500,
-          textAlign: 'center',
-          textShadow: '0 1px 1px rgba(255,255,255,0.6)',
-        }}
-      >
-        {label} content goes here.
-      </p>
-    </div>
-  );
-}
 
 export const APP_CONFIG = {
   welcome: {
     title:  'Welcome',
     icon:   '🌐',
     width:  440,
-    height: 320,
-    content: <PlaceholderContent label="Welcome" />,
+    height: 380,
+    content: <WelcomeApp />,
   },
   clock: {
     title:  'Clock',
     icon:   '🕐',
-    width:  320,
-    height: 220,
-    content: <PlaceholderContent label="Clock" />,
+    width:  280,
+    height: 280,
+    content: <ClockApp />,
   },
 };
 
