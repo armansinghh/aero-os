@@ -1,129 +1,239 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   FRUTIGER AERO DESIGN SYSTEM — Strict Skeuomorphic / Glassmorphic Spec
+   Windows Vista/7 era · glossy · wet · dimensional · corporate optimism
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
 :root {
-  --aero-sky:          #5BC8F5;
-  --aero-sky-dark:     #1A9FD4;
-  --aero-aqua:         #2ADFB8;
-  --aero-lime:         #8FD400;
-  --aero-deep:         #0B3B5C;
-  --aero-glass:        rgba(255, 255, 255, 0.22);
-  --aero-glass-hover:  rgba(255, 255, 255, 0.35);
-  --aero-glass-border: rgba(255, 255, 255, 0.55);
-  --aero-shadow:       rgba(0, 40, 80, 0.35);
-  --aero-specular:     inset 0 1px 0 rgba(255, 255, 255, 0.75),
-                       inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  --cyan:           #00A8E8;
+  --cyan-light:     #5BC8F5;
+  --cyan-deep:      #0077B6;
+  --lime:           #7CFC00;
+  --lime-dark:      #5BBB00;
+  --deep-navy:      #0A2540;
+  --glass-white:    rgba(255, 255, 255, 0.20);
+  --glass-border:   rgba(255, 255, 255, 0.40);
+  --glass-specular: rgba(255, 255, 255, 0.80);
+
+  /*
+    THE CANONICAL AERO GLASS BOX-SHADOW
+    Layer 1 — inner top specular edge (the signature highlight)
+    Layer 2 — inner bottom subtle rim
+    Layer 3 — outer diffuse blue shadow for depth
+    Layer 4 — outer tight shadow for crispness
+  */
+  --aero-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.80),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.15),
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 2px 8px 0 rgba(0, 0, 0, 0.18);
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;                   /* Desktop never scrolls */
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  /* "Segoe UI" first so Windows users get the authentic feel */
+  font-family: 'Segoe UI', 'San Francisco', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* ─── Aero Glass — the canonical container treatment ─────────────────────
+   bg-white/20 backdrop-blur-xl border border-white/40
+   shadow-[0_8px_32px_0_rgba(31,38,135,0.15),inset_0_1px_1px_rgba(255,255,255,0.8)]
+   ────────────────────────────────────────────────────────────────────────── */
 .aero-glass {
-  background: var(--aero-glass);
-  backdrop-filter: blur(14px) saturate(1.6);
-  -webkit-backdrop-filter: blur(14px) saturate(1.6);
-  border: 1px solid var(--aero-glass-border);
-  box-shadow:
-    var(--aero-specular),
-    0 8px 32px var(--aero-shadow),
-    0 2px 8px rgba(0, 0, 0, 0.2);
+  background:            rgba(255, 255, 255, 0.20);
+  backdrop-filter:       blur(20px) saturate(1.8) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.05);
+  border:                1px solid rgba(255, 255, 255, 0.40);
+  border-radius:         1rem;          /* rounded-2xl baseline */
+  box-shadow:            var(--aero-shadow);
 }
 
+/* Heavier glass for windows (more opaque, stronger shadow) */
+.aero-glass-window {
+  background:            rgba(255, 255, 255, 0.25);
+  backdrop-filter:       blur(24px) saturate(2.0) brightness(1.08);
+  -webkit-backdrop-filter: blur(24px) saturate(2.0) brightness(1.08);
+  border:                1px solid rgba(255, 255, 255, 0.50);
+  border-radius:         1.25rem;       /* rounded-[20px] */
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.10),
+    0 20px 60px 0 rgba(31, 38, 135, 0.22),
+    0 4px 16px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ─── Window Title Bar — cyan-tinted Aero chrome ────────────────────────── */
 .aero-titlebar {
   background: linear-gradient(
-    to bottom,
-    rgba(91, 200, 245, 0.55) 0%,
-    rgba(26, 159, 212, 0.40) 50%,
-    rgba(11, 59, 92,  0.30) 100%
+    180deg,
+    rgba(140, 210, 255, 0.75) 0%,     /* bright top edge — light hits here */
+    rgba(0,  168, 232, 0.55) 45%,     /* mid-cyan body */
+    rgba(0,  119, 182, 0.45) 100%     /* deeper blue at bottom */
   );
-  backdrop-filter: blur(10px) saturate(1.8);
-  -webkit-backdrop-filter: blur(10px) saturate(1.8);
-  box-shadow: var(--aero-specular);
+  backdrop-filter:       blur(12px) saturate(2.0);
+  -webkit-backdrop-filter: blur(12px) saturate(2.0);
+  /* Strong specular on title bar top */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 -1px 0 rgba(0, 100, 180, 0.30),
+    0 1px 4px rgba(0, 0, 0, 0.20);
+  border-radius: 1.25rem 1.25rem 0 0;  /* matches window top corners */
 }
 
+/* ─── Glossy Gel Button — primary ────────────────────────────────────────
+   The gel pill: aggressive gradient, punchy inner-top glow, rounded-full
+   ────────────────────────────────────────────────────────────────────────── */
 .aero-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem 1.1rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  display:          inline-flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              0.4rem;
+  padding:          0.4rem 1.25rem;
+  border-radius:    9999px;
+  border:           1px solid rgba(0, 150, 220, 0.50);
+  cursor:           pointer;
+  user-select:      none;
+  white-space:      nowrap;
+  font-family:      inherit;
+  font-weight:      600;
+  font-size:        0.8rem;
+  letter-spacing:   0.02em;
+  color:            #fff;
+  text-shadow:      0 1px 2px rgba(0, 0, 0, 0.45);
+
+  /* The gel gradient — white bloom at top, cyan body, deep blue heel */
   background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(91, 200, 245, 0.45) 50%,
-    rgba(26, 159, 212, 0.65) 100%
+    180deg,
+    #a8e4ff 0%,      /* specular bloom */
+    #00A8E8 35%,     /* cyan body */
+    #0077B6 100%     /* deep blue */
   );
+
+  /* Wet pill illusion: bright inset top + drop shadow */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-    0 2px 6px rgba(0, 40, 80, 0.3);
-  color: #0B3B5C;
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.01em;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
-  user-select: none;
+    inset 0 2px 4px rgba(255, 255, 255, 0.70),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.15),
+    0 4px 6px rgba(0, 0, 0, 0.20),
+    0 1px 3px rgba(0, 168, 232, 0.30);
+
+  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 .aero-btn:hover {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.70) 0%,
-    rgba(143, 212, 0,  0.35) 50%,
-    rgba(42,  223, 184, 0.60) 100%
-  );
+  filter: brightness(1.10) saturate(1.15);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 12px rgba(42, 223, 184, 0.4),
-    0 3px 8px rgba(0, 40, 80, 0.3);
+    inset 0 2px 4px rgba(255, 255, 255, 0.90),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.10),
+    0 6px 10px rgba(0, 168, 232, 0.40),
+    0 0 18px rgba(0, 168, 232, 0.25);
   transform: translateY(-1px);
 }
 
 .aero-btn:active {
-  transform: translateY(0px);
+  filter: brightness(0.95);
+  transform: translateY(1px);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.2),
-    0 1px 3px rgba(0, 40, 80, 0.2);
+    inset 0 2px 6px rgba(0, 0, 0, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
+/* ─── Lime accent button variant ─────────────────────────────────────────── */
+.aero-btn-lime {
+  border-color: rgba(80, 180, 0, 0.50);
+  background: linear-gradient(180deg, #ccff66 0%, #7CFC00 35%, #4eb800 100%);
+  color: #1a3300;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.50);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.65),
+    0 4px 6px rgba(0, 0, 0, 0.20),
+    0 1px 3px rgba(100, 220, 0, 0.35);
+}
+.aero-btn-lime:hover {
+  filter: brightness(1.10);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.85),
+    0 6px 12px rgba(124, 252, 0, 0.40),
+    0 0 20px rgba(124, 252, 0, 0.20);
+}
+
+/* ─── Window traffic-light control buttons ───────────────────────────────── */
 .win-ctrl {
-  width: 14px;
-  height: 14px;
+  width:         13px;
+  height:        13px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: all 0.15s;
-  flex-shrink: 0;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+  border:        1px solid rgba(0, 0, 0, 0.22);
+  cursor:        pointer;
+  flex-shrink:   0;
+  position:      relative;
+  transition:    filter 0.15s, transform 0.15s;
+  /* Glossy dome highlight */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 1px 3px rgba(0, 0, 0, 0.30);
 }
-.win-ctrl:hover { filter: brightness(1.15) saturate(1.2); transform: scale(1.15); }
+.win-ctrl::after {
+  content:       '';
+  position:      absolute;
+  top:           2px; left: 2px; right: 2px;
+  height:        40%;
+  border-radius: 50%;
+  background:    rgba(255, 255, 255, 0.55);  /* specular cap */
+}
+.win-ctrl:hover {
+  filter:    brightness(1.20) saturate(1.25);
+  transform: scale(1.18);
+}
 
-.text-on-glass {
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255,255,255,0.2);
+/* ─── Text on glass — readability shadows ────────────────────────────────── */
+.text-glass-white {
+  /* White text on glass — drop shadow for legibility */
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55));
 }
-.text-on-glass-light {
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-  color: #0B3B5C;
+.text-glass-dark {
+  /* Dark text inside glass containers */
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.80));
 }
 
+/* ─── Dock icon — Mac-style spring bounce ────────────────────────────────── */
 .dock-icon {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter    0.18s ease;
 }
 .dock-icon:hover {
-  transform: translateY(-10px) scale(1.2);
-  filter: drop-shadow(0 6px 16px rgba(91, 200, 245, 0.7));
+  transform: translateY(-14px) scale(1.25);
+  filter:    drop-shadow(0 8px 20px rgba(0, 168, 232, 0.75));
+}
+
+/* ─── Active glow orb (open-app indicator) ───────────────────────────────── */
+.glow-orb {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  /* Radial gradient to simulate a lit orb, not a flat dot */
+  background:    radial-gradient(circle at 35% 35%, #fff 0%, #00A8E8 45%, #005f99 100%);
+  box-shadow:    0 0 6px 2px rgba(0, 168, 232, 0.70);
+}
+.glow-orb-lime {
+  background:    radial-gradient(circle at 35% 35%, #fff 0%, #7CFC00 45%, #3a8c00 100%);
+  box-shadow:    0 0 6px 2px rgba(124, 252, 0, 0.65);
+}
+
+/* ─── Scrollbar — keep it Aero-themed inside windows ─────────────────────── */
+::-webkit-scrollbar        { width: 8px; }
+::-webkit-scrollbar-track  { background: rgba(255,255,255,0.10); border-radius: 4px; }
+::-webkit-scrollbar-thumb  {
+  background:    linear-gradient(180deg, #5BC8F5 0%, #0077B6 100%);
+  border-radius: 4px;
+  border:        1px solid rgba(255,255,255,0.30);
 }
