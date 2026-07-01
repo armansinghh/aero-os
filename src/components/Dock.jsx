@@ -2,11 +2,6 @@
 
 import React from 'react';
 
-// ─── Dock ─────────────────────────────────────────────────────────────────────
-// Plain Aero taskbar strip — no glass blur, no background panel.
-// Icons are glossy gel tiles directly on the desktop, simple scale on hover,
-// no transition curves or floating labels. Clock is single-line, Vista-tray style.
-
 export default function Dock({ apps, openWindows, onOpen }) {
   function isOpen(appId) {
     return openWindows.some((w) => w.id === appId && !w.minimized);
@@ -20,10 +15,10 @@ export default function Dock({ apps, openWindows, onOpen }) {
       <div
         className="flex items-end gap-3 px-4 py-2 rounded-2xl"
         style={{
-          background:           'rgba(255, 255, 255, 0.18)',
-          backdropFilter:       'blur(18px) saturate(1.7)',
+          background: 'rgba(255, 255, 255, 0.18)',
+          backdropFilter: 'blur(18px) saturate(1.7)',
           WebkitBackdropFilter: 'blur(18px) saturate(1.7)',
-          border:               '1px solid rgba(255, 255, 255, 0.40)',
+          border: '1px solid rgba(255, 255, 255, 0.40)',
           boxShadow: `
             inset 0 1px 1px rgba(255, 255, 255, 0.75),
             0 8px 24px rgba(0, 20, 50, 0.25),
@@ -40,24 +35,11 @@ export default function Dock({ apps, openWindows, onOpen }) {
             onClick={() => onOpen(app.id)}
           />
         ))}
-
-        {/* Plain divider — no gradient panel behind it */}
-        <div style={{
-          width: '1px',
-          height: '40px',
-          alignSelf: 'center',
-          marginLeft: '4px',
-          marginRight: '4px',
-          background: 'rgba(255,255,255,0.35)',
-        }} />
-
-        <SystemClock />
       </div>
     </div>
   );
 }
 
-// ─── Single Dock Icon ─────────────────────────────────────────────────────────
 function DockIcon({ app, open, minimized, onClick }) {
   const tileBg = app.tileBg || 'linear-gradient(180deg, #5bb4eb 0%, #178add 49%, #056bbb 50%, #004d8c 100%)';
 
@@ -68,7 +50,6 @@ function DockIcon({ app, open, minimized, onClick }) {
       onClick={onClick}
       title={app.label}
     >
-      {/* Icon tile — glossy gel square, simple scale on hover, no easing curve gimmicks */}
       <div
         className="relative w-12 h-12 rounded-[10px] mt-2 flex items-center justify-center hover:scale-110"
         style={{
@@ -83,7 +64,6 @@ function DockIcon({ app, open, minimized, onClick }) {
           transition: 'transform 0.1s linear',
         }}
       >
-        {/* Top-half gloss overlay — flat gradient, no blur */}
         <div
           className="absolute top-0 left-0 right-0 rounded-t-[10px] pointer-events-none"
           style={{
@@ -91,12 +71,11 @@ function DockIcon({ app, open, minimized, onClick }) {
             background: 'linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 100%)',
           }}
         />
-        <span className="relative" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.40))' }}>
+        <span className="relative" style={{ display: 'inline-flex', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.40))' }}>
           {app.icon}
         </span>
       </div>
 
-      {/* Label — plain text, no floating tooltip */}
       <span
         style={{
           color: '#ffffff',
@@ -110,7 +89,6 @@ function DockIcon({ app, open, minimized, onClick }) {
         {app.label}
       </span>
 
-      {/* State LED — small flat dot, no glow */}
       <div style={{ height: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1px' }}>
         {(open || minimized) && (
           <div
@@ -126,46 +104,4 @@ function DockIcon({ app, open, minimized, onClick }) {
       </div>
     </div>
   );
-}
-
-// ─── System Clock — single line, Windows XP/Vista taskbar tray style ─────────
-function SystemClock() {
-  const [time, setTime] = React.useState(() => formatTime(new Date()));
-
-  React.useEffect(() => {
-    const id = setInterval(() => setTime(formatTime(new Date())), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div
-      className="flex items-center justify-center"
-      style={{
-        height: '40px',
-        padding: '0 10px',
-        alignSelf: 'center',
-      }}
-    >
-      <span style={{
-        color: '#ffffff',
-        fontFamily: '"Segoe UI", Tahoma, sans-serif',
-        fontSize: '17px',
-        fontWeight: 700,
-        fontVariantNumeric: 'tabular-nums',
-        whiteSpace: 'nowrap',
-        textShadow: '0 1px 2px rgba(0,0,0,0.80)',
-        letterSpacing: '0.01em',
-      }}>
-        {time.hhmm} {time.ampm}
-      </span>
-    </div>
-  );
-}
-
-function formatTime(date) {
-  let hours   = date.getHours();
-  const mins  = date.getMinutes().toString().padStart(2, '0');
-  const ampm  = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  return { hhmm: `${hours}:${mins}`, ampm };
 }

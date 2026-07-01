@@ -1,35 +1,22 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Window from './Window';
 import WelcomeApp from './apps/WelcomeApp';
 import ClockApp from './apps/ClockApp';
-
-// ─── App content registry ──────────────────────────────────────────────────────
-// Maps an app id to its title/icon/default size/content component.
+import NotepadApp from './apps/NotepadApp';
+import WeatherApp from './apps/WeatherApp';
+import { GlobeIcon, ClockIcon, NotepadIcon, WeatherIcon } from './icons/AeroIcons';
 
 export const APP_CONFIG = {
-  welcome: {
-    title:  'Welcome',
-    icon:   '🌐',
-    width:  440,
-    height: 380,
-    content: <WelcomeApp />,
-  },
-  clock: {
-    title:  'Clock',
-    icon:   '🕐',
-    width:  280,
-    height: 280,
-    content: <ClockApp />,
-  },
+  welcome: { title: 'Welcome', icon: <GlobeIcon size={15} />, width: 440, height: 380, content: <WelcomeApp /> },
+  clock: { title: 'Clock', icon: <ClockIcon size={15} />, width: 280, height: 280, content: <ClockApp /> },
+  notepad: { title: 'Notepad', icon: <NotepadIcon size={15} />, width: 420, height: 340, content: <NotepadApp /> },
+  weather: { title: 'Weather', icon: <WeatherIcon size={15} />, width: 320, height: 400, content: <WeatherApp /> },
 };
 
-// ─── WindowManager ──────────────────────────────────────────────────────────────
-// Receives the openWindows array ({id, x, y, minimized}) from Desktop and
-// handles internal concerns: z-index stacking on focus, drag position updates.
-export default function WindowManager({ openWindows, onClose, onMinimize, onUpdatePosition }) {
-  // zOrder: array of window ids in stacking order (last = topmost)
+// --- WindowManager -----------------------------------------------------------
+export default function WindowManager({ openWindows, onClose, onMinimize, onUpdatePosition, onActiveChange }) {
   const [zOrder, setZOrder] = useState([]);
 
   const bringToFront = useCallback((id) => {
@@ -38,17 +25,23 @@ export default function WindowManager({ openWindows, onClose, onMinimize, onUpda
 
   function getZIndex(id) {
     const idx = zOrder.indexOf(id);
-    // Base z-index of 10 so windows always sit above the wallpaper/switcher,
-    // below the dock (z-50).
     return idx === -1 ? 10 : 10 + idx;
   }
+
+  useEffect(() => {
+    const visible = zOrder.filter((id) => {
+      const w = openWindows.find((ow) => ow.id === id);
+      return w && !w.minimized;
+    });
+    const topId = visible[visible.length - 1];
+    onActiveChange?.(topId ? APP_CONFIG[topId]?.title ?? null : null);
+  }, [zOrder, openWindows, onActiveChange]);
 
   return (
     <div className="absolute inset-0">
       {openWindows.map((win) => {
         const config = APP_CONFIG[win.id];
         if (!config) return null;
-
         return (
           <Window
             key={win.id}
