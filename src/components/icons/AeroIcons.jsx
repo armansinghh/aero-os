@@ -106,3 +106,15 @@ export function BatteryIcon({ size = 18, color = '#ffffff', level = 0.8 }) {
     </svg>
   );
 }
+
+export function SettingsIcon({ size = 28 }) {
+  return (
+    <IconBase size={size} gradId="settings" from="#ffffff" mid="#a0b4c8" to="#405b73">
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.4 29.5c-1 .2-2.3.2-3.3 0l-.8-3.4c-1-.4-2-.9-2.8-1.5l-3.3 1.3c-1-.5-1.8-1.1-2.5-1.9l1.6-3c-.6-.7-1.1-1.6-1.5-2.6L3.5 17.5c-.3-1-.3-2.1 0-3.1l3.3-.6c.4-1 .9-1.9 1.5-2.7l-1.5-3.1c.7-.8 1.6-1.5 2.5-1.9l3.2 1.4c.9-.7 1.8-1.2 2.8-1.6l.8-3.4c1-.2 2.3-.2 3.3 0l.8 3.4c1 .4 2 .9 2.8 1.5l3.3-1.3c1 .5 1.8 1.1 2.5 1.9l-1.6 3c.6.7 1.1 1.6 1.5 2.6l3.3.9c.3 1 .3 2.1 0 3.1l-3.3.6c-.4 1-.9 1.9-1.5 2.7l1.5 3.1c-.7.8-1.6 1.5-2.5 1.9l-3.2-1.4c-.9.7-1.8 1.2-2.8 1.6l-.8 3.4zm-3.4-17c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5z" fill="url(#settings)"
+        stroke="rgba(0, 30, 60, 0.6)" strokeWidth="1" />
+      <circle cx="16" cy="16" r="4.5" stroke="rgba(255, 255, 255, 0.9)" strokeWidth="1.5" fill="none" />
+      <circle cx="16" cy="16" r="11.5" stroke="rgba(255, 255, 255, 0.4)" strokeWidth="1" fill="none" strokeDasharray="2 4" />
+      <ellipse cx="16" cy="9.5" rx="10" ry="6" fill="url(#settings-gloss)" />
+    </IconBase>
+  );
+}
