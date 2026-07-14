@@ -1,5 +1,5 @@
-import Desktop from '@/components/Desktop';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <Desktop />;
+  redirect('/shutdown');
 }
