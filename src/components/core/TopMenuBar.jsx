@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Wifi, BatteryMedium, BatteryCharging, Volume2, ChevronUp } from 'lucide-react';
 import { useBattery } from '../../hooks/useBattery';
+import { useVolumeState } from '../../hooks/useVolumeState';
 
 import { useClock } from '@/hooks/useClock';
 import MenuBarButton from '../ui/MenuBarButton';
@@ -15,7 +16,7 @@ import WifiFlyout from '../flyouts/WifiFlyout';
 
 export default function TopMenuBar({ activeTitle }) {
   const [activeMenu, setActiveMenu] = useState(null);
-  const [volume, setVolume] = useState(65);
+  const [volume, setVolume] = useVolumeState();
 
   const { level, charging } = useBattery();
   const { time, dateFormatted } = useClock();

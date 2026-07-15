@@ -7,6 +7,17 @@ export default function AeroSlider({ value, onChange }) {
   const [isMuted, setIsMuted] = useState(false);
   const displayValue = isMuted ? 0 : value;
 
+  const handleToggleMute = () => {
+    if (isMuted) {
+      setIsMuted(false);
+      onChange(65);
+      return;
+    }
+
+    setIsMuted(true);
+    onChange(0);
+  };
+
   return (
     <div className="flex flex-col items-center gap-4 py-2 select-none">
       {/* The Vertical Track */}
@@ -58,7 +69,7 @@ export default function AeroSlider({ value, onChange }) {
 
       {/* Mute Button */}
       <button 
-        onClick={() => setIsMuted(!isMuted)}
+        onClick={handleToggleMute}
         className="p-1.5 rounded hover:bg-black/10 active:bg-black/20"
       >
         {isMuted || value === 0 ? <VolumeX size={16} color="#333" /> : <Volume2 size={16} color="#333" />}

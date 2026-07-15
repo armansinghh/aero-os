@@ -2,14 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Shuffle, Film, Music, Image as ImageIcon } from 'lucide-react';
+import { FILE_SYSTEM } from '../config/files';
+import { useVolumeState } from '../../hooks/useVolumeState';
 
 export default function MediaPlayerApp({ file }) {
-  const activeFile = file || {
-    name: 'Frutiger Dreams.mp3',
-    artist: 'The Aero Collective',
-    type: 'audio',
-    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-  };
+  const [selectedFile, setSelectedFile] = useState(file || FILE_SYSTEM[2]);
+  const activeFile = file || selectedFile;
+  const [volume, setVolume] = useVolumeState();
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -17,17 +16,27 @@ export default function MediaPlayerApp({ file }) {
   const [duration, setDuration] = useState('0:00');
   const mediaRef = useRef(null);
 
-  // Auto-reload the player core instantly when a fresh file is passed from explorer
   useEffect(() => {
-    setIsPlaying(false);
-    setProgress(0);
-    setCurrentTime('0:00');
-    setDuration('0:00');
+    const resetPlayback = () => {
+      setIsPlaying(false);
+      setProgress(0);
+      setCurrentTime('0:00');
+      setDuration('0:00');
+    };
+
+    resetPlayback();
 
     if (mediaRef.current) {
       mediaRef.current.load();
     }
-  }, [file]);
+  }, [activeFile]);
+
+  useEffect(() => {
+    if (!mediaRef.current) return;
+
+    mediaRef.current.volume = volume / 100;
+    mediaRef.current.muted = volume === 0;
+  }, [volume]);
 
   const togglePlay = () => {
     if (activeFile.type === 'image') return;
@@ -64,7 +73,6 @@ export default function MediaPlayerApp({ file }) {
           <span className="hover:text-black cursor-pointer">Stream</span>
           <span className="hover:text-black cursor-pointer">Create playlist</span>
         </div>
-        <div className="text-gray-400 text-[10px]">Media Player</div>
       </div>
       <div className="flex-1 flex overflow-hidden">
 
@@ -82,6 +90,24 @@ export default function MediaPlayerApp({ file }) {
             <button className={`text-left px-2 py-1 rounded-xs flex items-center gap-1.5 ${activeFile.type === 'image' ? 'bg-[#bcccdc] font-semibold text-black' : 'hover:bg-[#deebf6]'}`}>
               <ImageIcon size={12} color="#555" /> Pictures
             </button>
+          </div>
+
+          <div className="mt-2 border-t border-[#d3dce7] pt-2">
+            <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Files</div>
+            <div className="flex flex-col gap-0.5 max-h-48 overflow-y-auto pr-1">
+              {FILE_SYSTEM.map((item) => {
+                const isActive = activeFile?.id === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setSelectedFile(item)}
+                    className={`text-left rounded-xs px-2 py-1 hover:bg-[#deebf6] ${isActive ? 'bg-[#bcccdc] font-semibold text-black' : 'text-gray-700'}`}
+                  >
+                    {item.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -151,9 +177,15 @@ export default function MediaPlayerApp({ file }) {
 
         <div className={`w-48 flex items-center justify-end gap-2 ${activeFile.type === 'image' ? 'opacity-40' : ''}`}>
           <Volume2 size={14} className="text-gray-600" />
-          <div className="w-16 h-1 bg-[#d5e0ea] rounded-full relative overflow-hidden border border-[#b5c7d6]">
-            <div className="absolute top-0 left-0 bottom-0 bg-[#007cd6]" style={{ width: '70%' }} />
-          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={(event) => setVolume(Number(event.target.value))}
+            className="w-16 h-1 accent-[#007cd6] cursor-pointer"
+          />
+          <span className="text-[10px] text-gray-600 w-7 text-right">{volume}</span>
         </div>
       </div>
     </div>

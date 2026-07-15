@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Monitor, Volume2, Paintbrush, Wifi, Info, User, HardDrive, ShieldCheck, Lock, ChevronRight, CheckCircle2, Volume1 } from 'lucide-react';
 import { useNetworkState } from '../../hooks/useNetworkState';
+import { useVolumeState } from '../../hooks/useVolumeState';
 
 function SectionHeader({ title }) {
     return (
@@ -19,7 +20,7 @@ export default function SettingsApp({ wallpaperProps }) {
     const [activeTab, setActiveTab] = useState('personalization');
     const [inputUrl, setInputUrl] = useState('');
     const [status, setStatus] = useState('');
-    const [volume, setVolume] = useState(68);
+    const [volume, setVolume] = useVolumeState();
     const [networkState, updateNetworkState] = useNetworkState();
     const [selectedAccount] = useState('guest');
 

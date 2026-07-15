@@ -2,6 +2,18 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 
+const TOP_MENU_BAR_HEIGHT = 38;
+const WINDOW_PADDING = 2;
+
+function clampWindowPosition(x, y, width, height) {
+  const maxX = Math.max(WINDOW_PADDING, window.innerWidth - width - WINDOW_PADDING);
+  const maxY = Math.max(TOP_MENU_BAR_HEIGHT, window.innerHeight - height - WINDOW_PADDING);
+  return {
+    x: Math.min(Math.max(x, WINDOW_PADDING), maxX),
+    y: Math.min(Math.max(y, TOP_MENU_BAR_HEIGHT), maxY),
+  };
+}
+
 export default function Window({
   id,
   title,
@@ -41,9 +53,10 @@ export default function Window({
   useEffect(() => {
     function handleMouseMove(e) {
       if (!dragState.current.dragging) return;
-      const newX = e.clientX - dragState.current.offsetX;
-      const newY = Math.max(0, e.clientY - dragState.current.offsetY);
-      onMove(id, newX, newY);
+      const rawX = e.clientX - dragState.current.offsetX;
+      const rawY = e.clientY - dragState.current.offsetY;
+      const clamped = clampWindowPosition(rawX, rawY, width, height);
+      onMove(id, clamped.x, clamped.y);
     }
     function handleMouseUp() {
       if (dragState.current.dragging) {
@@ -57,7 +70,7 @@ export default function Window({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [id, onMove]);
+  }, [height, id, onMove, width]);
 
   if (minimized) return null;
 
@@ -65,8 +78,8 @@ export default function Window({
     <div
       className="absolute pointer-events-auto"
       style={{
-        left: `${x}px`,
-        top: `${y}px`,
+        left: `${clampWindowPosition(x, y, width, height).x}px`,
+        top: `${clampWindowPosition(x, y, width, height).y}px`,
         width: `${width}px`,
         height: `${height}px`,
         zIndex,
