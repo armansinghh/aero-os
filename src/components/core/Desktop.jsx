@@ -144,7 +144,7 @@ export default function Desktop() {
         }}
       />
 
-      <StartMenu />
+      <StartMenu onOpenApp={openApp} />
 
       <Dock apps={APP_REGISTRY} openWindows={openWindows} onOpen={openApp} />
 
