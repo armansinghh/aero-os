@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Monitor, Image as ImageIcon } from 'lucide-react';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { APP_REGISTRY } from '../config/apps';
@@ -48,6 +48,31 @@ export default function Desktop() {
     setIsHydrated(true);
   }, []);
 
+  const openApp = useCallback((appId, customProps = {}) => {
+    setOpenWindows((prev) => {
+      if (prev.find((w) => w.id === appId)) {
+        return prev.map((w) => (w.id === appId ? { ...w, minimized: false, props: customProps } : w));
+      }
+      return [
+        ...prev,
+        {
+          id: appId,
+          minimized: false,
+          x: 120 + prev.length * 30,
+          y: 100 + prev.length * 30,
+          props: customProps
+        }
+      ];
+    });
+  }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('welcome_show_at_startup');
+    if (stored === null || stored === 'true') {
+      openApp('welcome');
+    }
+  }, [openApp]);
+
   const handleWallpaperSelect = (index) => {
     setWallpaperIndex(index);
     localStorage.setItem('desktop_wallpaper_index', index.toString());
@@ -64,24 +89,6 @@ export default function Desktop() {
 
   const activeWp = WALLPAPERS[wallpaperIndex] || WALLPAPERS[0];
   const resolvedSrc = activeWp.id === 'custom' ? customUrl : activeWp.src;
-
-  function openApp(appId, customProps = {}) {
-    setOpenWindows((prev) => {
-      if (prev.find((w) => w.id === appId)) {
-        return prev.map((w) => (w.id === appId ? { ...w, minimized: false, props: customProps } : w));
-      }
-      return [
-        ...prev,
-        {
-          id: appId,
-          minimized: false,
-          x: 120 + prev.length * 30,
-          y: 100 + prev.length * 30,
-          props: customProps
-        }
-      ];
-    });
-  }
 
   function closeWindow(appId) {
     setOpenWindows((prev) => prev.filter((w) => w.id !== appId));

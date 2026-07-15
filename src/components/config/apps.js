@@ -18,7 +18,7 @@ export const APP_REGISTRY = [
     icon: <GlobeIcon size={26} />,
     smallIcon: <GlobeIcon size={15} />,
     tileBg: 'linear-gradient(135deg, #b3ecff 0%, #00A8E8 50%, #005f99 100%)',
-    width: 440,
+    width: 500,
     height: 380,
     component: WelcomeApp,
   },

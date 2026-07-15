@@ -1,212 +1,134 @@
 'use client';
 
-export default function WelcomeApp() {
+import { useEffect, useState } from 'react';
+import { Monitor, Paintbrush, FolderSearch, Music, Gamepad2, Info } from 'lucide-react';
+
+const STARTUP_KEY = 'welcome_show_at_startup';
+
+export default function WelcomeApp({ onOpenApp }) {
+  const [showAtStartup, setShowAtStartup] = useState(true);
+  const welcomeTasks = [
+    {
+      id: 'settings',
+      icon: <Paintbrush size={28} className="text-[#0058a3]" strokeWidth={1.5} />,
+      title: 'Personalize Windows',
+      desc: 'Change your desktop background, window colors, and sounds to make your computer your own.',
+    },
+    {
+      id: 'explorer',
+      icon: <FolderSearch size={28} className="text-[#0058a3]" strokeWidth={1.5} />,
+      title: 'Browse your files',
+      desc: 'Open the File Explorer to view your documents, pictures, and local disk drives.',
+    },
+    {
+      id: 'media',
+      icon: <Music size={28} className="text-[#0058a3]" strokeWidth={1.5} />,
+      title: 'Listen to music',
+      desc: 'Launch Windows Media Player to stream your audio and video files.',
+    },
+    {
+      id: 'games',
+      icon: <Gamepad2 size={28} className="text-[#0058a3]" strokeWidth={1.5} />,
+      title: 'Games Explorer',
+      desc: 'Discover and play classic embedded games built for AeroOS.',
+    },
+  ];
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STARTUP_KEY);
+    if (stored !== null) {
+      setShowAtStartup(stored === 'true');
+    }
+  }, []);
+
+  const handleStartupToggle = () => {
+    setShowAtStartup((current) => {
+      const next = !current;
+      localStorage.setItem(STARTUP_KEY, next.toString());
+      return next;
+    });
+  };
+
   return (
-    <div
-      className="w-full h-full flex flex-col items-center justify-between px-6 py-5 overflow-auto select-none relative"
-      style={{
-        background: `
-          radial-gradient(circle at 15% 0%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
-          radial-gradient(circle at 85% 100%, rgba(124, 252, 0, 0.15) 0%, transparent 50%),
-          linear-gradient(165deg, rgba(220, 240, 250, 0.5) 0%, rgba(179, 227, 255, 0.35) 45%, rgba(128, 208, 255, 0.25) 75%, rgba(168, 240, 182, 0.25) 100%)
-        `,
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        boxShadow: 'inset 0 0 20px rgba(255,255,255,0.4)',
-      }}
-    >
+    <div className="w-full h-full flex flex-col bg-white select-none font-['Segoe_UI',Tahoma,sans-serif]">
+
+      {/* header */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        className="flex items-center gap-4 px-6 py-5 border-b border-[#dfdfdf]"
         style={{
-          backgroundImage:
-            'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)',
-          backgroundSize: '4px 4px',
-        }}
-      />
-
-      <div className="flex flex-col items-center gap-2 pt-1 relative z-10">
-        <HeroBadge />
-
-        <h1
-          style={{
-            fontFamily: '"Segoe UI", Frutiger, "Frutiger Linotype", sans-serif',
-            fontSize: '18px',
-            fontWeight: 700,
-            color: '#062640',
-            textShadow:
-              '0 0 8px rgba(255,255,255,1), 0 0 4px rgba(255,255,255,0.8), 0 1px 1px rgba(255,255,255,0.9)',
-            letterSpacing: '0.02em',
-            marginTop: '6px',
-          }}
-        >
-          AeroOS
-        </h1>
-
-        <p
-          style={{
-            fontFamily: '"Segoe UI", Tahoma, sans-serif',
-            fontSize: '12px',
-            color: '#1a3b5c',
-            textAlign: 'center',
-            lineHeight: 1.4,
-            maxWidth: '280px',
-            textShadow: '0 1px 1px rgba(255,255,255,0.8)',
-            fontWeight: 500,
-          }}
-        >
-          A weekend build, mostly an excuse to play with glass, gradients,
-          and bring back a desktop look from the Vista era.
-        </p>
-      </div>
-
-      <div className="flex items-center gap-2 flex-wrap justify-center my-4 relative z-10">
-        {['Glass UI', 'Draggable Windows', 'Live Dock'].map((label) => (
-          <span
-            key={label}
-            className="relative overflow-hidden"
-            style={{
-              fontSize: '10px',
-              fontFamily: 'Tahoma, sans-serif',
-              fontWeight: 700,
-              color: '#ffffff',
-              padding: '4px 12px',
-              borderRadius: '9999px',
-              border: '1px solid rgba(0, 50, 100, 0.4)',
-              background:
-                'linear-gradient(180deg, #5bb4eb 0%, #178add 49%, #056bbb 50%, #004d8c 100%)',
-              boxShadow: `
-                0 2px 4px rgba(0,0,0,0.2),
-                inset 0 -2px 4px rgba(0,0,0,0.2)
-              `,
-              textShadow: '0 -1px 1px rgba(0,0,0,0.4)',
-            }}
-          >
-            <div
-              className="absolute top-0 left-0 w-full rounded-full"
-              style={{
-                height: '45%',
-                background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%)',
-                transform: 'scaleY(0.9)',
-              }}
-            />
-            <span className="relative z-10">{label}</span>
-          </span>
-        ))}
-      </div>
-
-      <div
-        className="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-lg relative z-10"
-        style={{
-          background:
-            'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.8)',
-          borderBottom: '1px solid rgba(0,0,0,0.1)',
-          boxShadow: `
-            inset 0 1px 3px rgba(255,255,255,0.9),
-            inset 0 -1px 2px rgba(255,255,255,0.4),
-            0 2px 5px rgba(0,40,80,0.1)
-          `,
+          background: 'linear-gradient(180deg, #ffffff 0%, #f0f4f9 100%)'
         }}
       >
-        <span
-          style={{
-            fontSize: '10px',
-            fontFamily: '"Segoe UI", Tahoma, sans-serif',
-            fontWeight: 600,
-            color: '#1a3b5c',
-            textShadow: '0 1px 1px rgba(255,255,255,0.9)',
-          }}
-        >
-          Built by{' '}
-          <a
-            href="http://armansingh.me"
-            target="_blank"
-            style={{ color: '#0066cc', textDecoration: 'none' }}
-            onMouseOver={(e) => (e.target.style.textDecoration = 'underline')}
-            onMouseOut={(e) => (e.target.style.textDecoration = 'none')}
-          >
-            Arman
-          </a>
-        </span>
+        <div className="w-14 h-14 rounded-full flex items-center justify-center bg-linear-to-br from-[#e5f3ff] to-[#cce8ff] border border-[#99d1ff] shadow-[inset_0_1px_3px_rgba(255,255,255,0.8),0_2px_4px_rgba(0,0,0,0.1)]">
+          <Monitor size={32} color="#0058a3" strokeWidth={1.5} />
+        </div>
+        <div>
+          <h1 className="text-[22px] font-normal text-[#003399] tracking-tight">
+            Getting Started with AeroOS
+          </h1>
+          <p className="text-[12px] text-gray-600 mt-0.5">
+            Discover what you can do with your new desktop environment.
+          </p>
+        </div>
       </div>
-    </div>
-  );
-}
 
-// --- Hero badge: The "Vista Pearl" ------------------------------------------
-function HeroBadge() {
-  return (
-    <div
-      style={{
-        width: '72px',
-        height: '72px',
-        borderRadius: '50%',
-        position: 'relative',
-        background:
-          'radial-gradient(circle at 30% 30%, #38bdf8 0%, #0284c7 40%, #0369a1 80%, #0c4a6e 100%)',
-        boxShadow: `
-          inset 0 -4px 8px rgba(124, 252, 0, 0.4), 
-          inset 0 -1px 2px rgba(255, 255, 255, 0.5),
-          0 6px 12px rgba(0, 50, 100, 0.4),
-          0 1px 3px rgba(0, 0, 0, 0.3)
-        `,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-15%',
-          left: '10%',
-          width: '80%',
-          height: '60%',
-          borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(167, 243, 208, 0.7) 0%, transparent 70%)',
-          filter: 'blur(4px)',
-        }}
-      />
+      {/* main content */}
+      <div className="flex-1 overflow-y-auto p-4 bg-white">
+        <div className="max-w-2xl mx-auto flex flex-col gap-1">
+          {welcomeTasks.map((task) => (
+            <div
+              key={task.id}
+              onClick={() => onOpenApp?.(task.id)}
+              className="flex items-start gap-4 p-3 border border-transparent hover:border-[#b8d6fb] hover:bg-[#e5f3ff] rounded cursor-pointer group transition-colors"
+            >
+              <div className="mt-1 drop-shadow-sm">
+                {task.icon}
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[13px] text-[#003399] group-hover:underline font-semibold">
+                  {task.title}
+                </span>
+                <span className="text-[12px] text-gray-700">
+                  {task.desc}
+                </span>
+              </div>
+            </div>
+          ))}
 
-      <div
-        style={{
-          position: 'absolute',
-          width: '120%',
-          height: '120%',
-          borderTop: '6px solid rgba(255,255,255,0.6)',
-          borderRadius: '50%',
-          transform: 'rotate(-30deg) translateY(-25px)',
-          filter: 'blur(1px)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          width: '90%',
-          height: '90%',
-          borderBottom: '4px solid rgba(255,255,255,0.4)',
-          borderRadius: '50%',
-          transform: 'rotate(-15deg) translateY(20px)',
-          filter: 'blur(1px)',
-        }}
-      />
+          <div className="flex items-start gap-4 p-3 border border-transparent mt-2">
+            <div className="mt-1 drop-shadow-sm">
+              <Info size={28} className="text-[#555]" strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[13px] text-gray-800 font-semibold">
+                About this project
+              </span>
+              <span className="text-[12px] text-gray-600">
+                A weekend build by Arman, mostly an excuse to play with glass, gradients, and bring back a desktop look from the Vista era.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div
-        style={{
-          position: 'absolute',
-          top: '2px',
-          left: '12%',
-          width: '76%',
-          height: '45%',
-          borderRadius: '50% 50% 30% 30% / 100% 100% 30% 30%',
-          background:
-            'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0) 100%)',
-          zIndex: 10,
-        }}
-      />
+      {/* footer */}
+      <div className="h-10 bg-[#f0f4f9] border-t border-[#dfdfdf] flex items-center justify-between px-4 text-[11px] text-gray-600">
+        <label className="flex items-center gap-1.5 cursor-pointer hover:text-black">
+          <input
+            type="checkbox"
+            checked={showAtStartup}
+            onChange={handleStartupToggle}
+            className="mt-0.5"
+          />
+          Show this screen at startup
+        </label>
+
+        <div className="flex items-center gap-4">
+          <span className="w-px h-3 bg-gray-300" />
+          <span>AeroOS Core v2.0</span>
+        </div>
+      </div>
+
     </div>
   );
 }
