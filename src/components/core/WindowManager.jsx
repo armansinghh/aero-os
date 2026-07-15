@@ -2,21 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Window from './Window';
-import WelcomeApp from '../apps/WelcomeApp';
-import ClockApp from '../apps/ClockApp';
-import NotepadApp from '../apps/NotepadApp';
-import WeatherApp from '../apps/WeatherApp';
-import SettingsApp from '../apps/SettingsApp';
-import { GlobeIcon, ClockIcon, NotepadIcon, WeatherIcon, SettingsIcon } from '../icons/AeroIcons';
-
-export const APP_CONFIG = {
-  welcome: { title: 'Welcome', icon: <GlobeIcon size={15} />, width: 440, height: 380, content: <WelcomeApp /> },
-  clock: { title: 'Clock', icon: <ClockIcon size={15} />, width: 280, height: 280, content: <ClockApp /> },
-  notepad: { title: 'Notepad', icon: <NotepadIcon size={15} />, width: 420, height: 340, content: <NotepadApp /> },
-  weather: { title: 'Weather', icon: <WeatherIcon size={15} />, width: 320, height: 400, content: <WeatherApp /> },
-  // Settings content here acts as a fallback; we will override it in the render loop below to inject props
-  settings: { title: 'Settings', icon: <SettingsIcon size={15} />, width: 600, height: 400, content: <SettingsApp /> },
-};
+import { getAppConfig } from '../config/apps';
 
 export default function WindowManager({
   openWindows,
@@ -43,25 +29,24 @@ export default function WindowManager({
       return w && !w.minimized;
     });
     const topId = visible[visible.length - 1];
-    onActiveChange?.(topId ? APP_CONFIG[topId]?.title ?? null : null);
+
+    const activeApp = getAppConfig(topId);
+    onActiveChange?.(activeApp ? activeApp.title : null);
   }, [zOrder, openWindows, onActiveChange]);
 
   return (
     <div className="absolute inset-0 pointer-events-none">
       {openWindows.map((win) => {
-        const config = APP_CONFIG[win.id];
+        const config = getAppConfig(win.id);
         if (!config) return null;
-
-        const content = win.id === 'settings'
-          ? <SettingsApp wallpaperProps={wallpaperProps} />
-          : config.content;
+        const AppComponent = config.component;
 
         return (
           <Window
             key={win.id}
             id={win.id}
             title={config.title}
-            icon={config.icon}
+            icon={config.smallIcon}
             x={win.x}
             y={win.y}
             width={config.width}
@@ -73,7 +58,7 @@ export default function WindowManager({
             onFocus={bringToFront}
             onMove={onUpdatePosition}
           >
-            {content}
+            <AppComponent wallpaperProps={wallpaperProps} />
           </Window>
         );
       })}

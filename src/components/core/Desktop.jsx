@@ -1,27 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Monitor, Image as ImageIcon } from 'lucide-react';
+import { useContextMenu } from '@/hooks/useContextMenu';
+import { APP_REGISTRY } from '../config/apps';
 import Dock from './Dock';
+import StartMenu from './StartMenu';
 import WindowManager from './WindowManager';
 import TopMenuBar from './TopMenuBar';
-import { GlobeIcon, ClockIcon, NotepadIcon, WeatherIcon, SettingsIcon } from '@/components/icons/AeroIcons';
-import { useContextMenu } from '@/hooks/useContextMenu';
 import ContextMenu from './ContextMenu';
-import { Monitor, Image as ImageIcon } from 'lucide-react';
 
 const WALLPAPERS = [
   { id: 'wp1', src: '/wallpapers/wallpaper-1.jpg', label: 'Aero Theme 1 (Aurora)' },
   { id: 'wp2', src: '/wallpapers/wallpaper-2.jpg', label: 'Aero Theme 2 (Meadow)' },
   { id: 'wp3', src: '/wallpapers/wallpaper-3.jpg', label: 'Aero Theme 3 (Droplets)' },
   { id: 'custom', src: null, label: 'Custom URL' },
-];
-
-const APP_REGISTRY = [
-  { id: 'welcome', label: 'Welcome', icon: <GlobeIcon size={26} />, tileBg: 'linear-gradient(135deg, #b3ecff 0%, #00A8E8 50%, #005f99 100%)' },
-  { id: 'clock', label: 'Clock', icon: <ClockIcon size={26} />, tileBg: 'linear-gradient(135deg, #d4ffb3 0%, #7CFC00 50%, #3a8800 100%)' },
-  { id: 'notepad', label: 'Notepad', icon: <NotepadIcon size={26} />, tileBg: 'linear-gradient(135deg, #ffe9b3 0%, #ffb800 50%, #a86a00 100%)' },
-  { id: 'weather', label: 'Weather', icon: <WeatherIcon size={26} />, tileBg: 'linear-gradient(135deg, #d6f0ff 0%, #5bc8f5 50%, #0077b6 100%)' },
-  { id: 'settings', label: 'Settings', icon: <SettingsIcon size={26} />, tileBg: 'linear-gradient(135deg, #e0e0e0 0%, #a6a6a6 50%, #666666 100%)' },
 ];
 
 function Wallpaper({ src }) {
@@ -133,6 +126,8 @@ export default function Desktop() {
           onSetCustomUrl: handleCustomUrlSet
         }}
       />
+
+      <StartMenu />
 
       <Dock apps={APP_REGISTRY} openWindows={openWindows} onOpen={openApp} />
 
