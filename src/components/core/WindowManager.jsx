@@ -10,13 +10,24 @@ export default function WindowManager({
   onMinimize,
   onUpdatePosition,
   onActiveChange,
-  wallpaperProps
+  wallpaperProps,
+  onOpen
 }) {
   const [zOrder, setZOrder] = useState([]);
 
   const bringToFront = useCallback((id) => {
     setZOrder((prev) => [...prev.filter((wid) => wid !== id), id]);
   }, []);
+
+  useEffect(() => {
+    const newWindowId = openWindows.find(
+      (w) => !w.minimized && !zOrder.includes(w.id)
+    )?.id;
+
+    if (newWindowId) {
+      bringToFront(newWindowId);
+    }
+  }, [openWindows, zOrder, bringToFront]);
 
   function getZIndex(id) {
     const idx = zOrder.indexOf(id);
@@ -58,7 +69,11 @@ export default function WindowManager({
             onFocus={bringToFront}
             onMove={onUpdatePosition}
           >
-            <AppComponent wallpaperProps={wallpaperProps} />
+            <AppComponent
+              wallpaperProps={wallpaperProps}
+              onOpenApp={onOpen}
+              {...win.props}
+            />
           </Window>
         );
       })}

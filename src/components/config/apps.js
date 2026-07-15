@@ -79,7 +79,7 @@ export const APP_REGISTRY = [
   },
   {
     id: 'media',
-    title: 'Windows Media Player',
+    title: 'Media Player',
     label: 'Media Player',
     icon: <Disc size={26} color="#0ea5e9" />,
     smallIcon: <Disc size={15} color="#0ea5e9" />,

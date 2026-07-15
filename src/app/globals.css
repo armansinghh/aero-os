@@ -176,3 +176,30 @@ body {
   border: 1px solid #707070;
   box-shadow: inset 0 1px 0 #ffffff;
 }
+
+/* media player */
+.wmp-container {
+  background: linear-gradient(180deg, #f4f8fb 0%, #e5eef5 40%, #d5e3ee 100%);
+}
+
+.wmp-sidebar {
+  background: linear-gradient(90deg, #f7f9fb 0%, #edf2f7 100%);
+  border-right: 1px solid #b4c6d8;
+}
+
+.wmp-control-deck {
+  background: linear-gradient(180deg, rgba(238, 244, 249, 0.95) 0%, rgba(218, 229, 239, 0.95) 45%, rgba(198, 214, 227, 0.95) 50%, rgba(214, 226, 236, 0.95) 100%);
+  border-top: 1px solid #a3b8cc;
+  box-shadow: inset 0 1px 0 #ffffff, 0 -2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.wmp-play-button {
+  background: radial-gradient(circle at 50% 30%, #52c8f8 0%, #0076d6 60%, #00458a 100%);
+  border: 1px solid #002e5c;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.wmp-play-button:hover {
+  filter: brightness(1.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7), 0 0 10px rgba(0, 120, 215, 0.5), 0 3px 6px rgba(0,0,0,0.3);
+}

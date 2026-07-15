@@ -45,7 +45,7 @@ export default function StartMenu() {
                                 </div>
                                 <div className="flex items-center gap-2 p-1.5 hover:bg-[#cce8ff] hover:border-[#99d1ff] border border-transparent rounded cursor-pointer transition-colors">
                                     <Music size={20} className="text-orange-500" />
-                                    <span className="text-[12px] text-gray-900 leading-tight">Windows Media Player</span>
+                                    <span className="text-[12px] text-gray-900 leading-tight">Media Player</span>
                                 </div>
                                 <div className="flex items-center gap-2 p-1.5 hover:bg-[#cce8ff] hover:border-[#99d1ff] border border-transparent rounded cursor-pointer transition-colors">
                                     <Gamepad2 size={20} className="text-green-600" />

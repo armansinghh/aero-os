@@ -65,12 +65,21 @@ export default function Desktop() {
   const activeWp = WALLPAPERS[wallpaperIndex] || WALLPAPERS[0];
   const resolvedSrc = activeWp.id === 'custom' ? customUrl : activeWp.src;
 
-  function openApp(appId) {
+  function openApp(appId, customProps = {}) {
     setOpenWindows((prev) => {
       if (prev.find((w) => w.id === appId)) {
-        return prev.map((w) => (w.id === appId ? { ...w, minimized: false } : w));
+        return prev.map((w) => (w.id === appId ? { ...w, minimized: false, props: customProps } : w));
       }
-      return [...prev, { id: appId, minimized: false, x: 120 + prev.length * 30, y: 100 + prev.length * 30 }];
+      return [
+        ...prev,
+        {
+          id: appId,
+          minimized: false,
+          x: 120 + prev.length * 30,
+          y: 100 + prev.length * 30,
+          props: customProps
+        }
+      ];
     });
   }
 
@@ -118,6 +127,7 @@ export default function Desktop() {
         onMinimize={minimizeWindow}
         onUpdatePosition={updateWindowPosition}
         onActiveChange={setActiveTitle}
+        onOpen={openApp}
         wallpaperProps={{
           wallpapers: WALLPAPERS,
           activeIndex: wallpaperIndex,
